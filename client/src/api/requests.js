@@ -1,5 +1,5 @@
 // Replace with your own TMDb API key
-export const API_KEY = "4f32f5841c26e46bea4923a417d9415c";
+export const API_KEY = "";
 
 export const rowConfigurations = [
     {
