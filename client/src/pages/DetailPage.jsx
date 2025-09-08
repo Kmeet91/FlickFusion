@@ -21,6 +21,7 @@ const DetailPage = () => {
     const [images, setImages] = useState({ backdrops: [], posters: [] });
     const [recommendations, setRecommendations] = useState([]);
     const [keywords, setKeywords] = useState([]);
+    const [providers, setProviders] = useState(null); // <-- State for watch providers
     const [tmdbReviews, setTmdbReviews] = useState([]);
     const [ourReviews, setOurReviews] = useState([]);
     const [reviewText, setReviewText] = useState("");
@@ -47,6 +48,7 @@ const DetailPage = () => {
 
             try {
                 const ourReviewsRes = await api.get(`/reviews/${mediaType}/${id}`);
+                const providersRes = await api.get(`/tmdb/providers/${mediaType}/${id}`);
                 const [detailsRes, creditsRes, videosRes, imagesRes, recommendationsRes, keywordsRes, tmdbReviewsRes] = await Promise.all(
                     endpoints.map(endpoint => axios.get(endpoint))
                 );
@@ -54,6 +56,7 @@ const DetailPage = () => {
                 if (isMounted) {
                     setDetails(detailsRes.data);
                     setCredits(creditsRes.data);
+                    setProviders(providersRes.data.results); 
                     setVideos(videosRes.data.results);
                     setImages(imagesRes.data);
                     setRecommendations(recommendationsRes.data.results);
@@ -138,6 +141,18 @@ const DetailPage = () => {
         return <div className="bg-black text-white h-screen flex justify-center items-center">Loading...</div>;
     }
 
+    const renderProviderList = (providerList) => (
+        <div className="flex flex-wrap gap-4">
+            {providerList.map(p => (
+                <div key={p.provider_id} className="text-center" title={p.provider_name}>
+                    <img src={`https://image.tmdb.org/t/p/w92/${p.logo_path}`} alt={p.provider_name} className="w-12 h-12 rounded-lg" />
+                </div>
+            ))}
+        </div>
+    );
+
+    const watchLinks = providers?.IN || providers?.US;
+
     return (
         <div className="bg-[#141414] min-h-screen text-white">
             <Navbar />
@@ -168,6 +183,34 @@ const DetailPage = () => {
                                 <div className="p-2"><p className="font-bold text-sm">{actor.name}</p><p className="text-xs text-gray-400">{actor.character}</p></div>
                             </Link>
                         ))}
+                        {watchLinks && (
+                            <>
+                                <h2 className="text-3xl font-bold mt-8 mb-4">Where to Watch</h2>
+                                <div className="bg-neutral-800 p-4 rounded-lg">
+                                    {watchLinks.flatrate && (
+                                        <div>
+                                            <h3 className="font-semibold mb-2">Streaming On:</h3>
+                                            {renderProviderList(watchLinks.flatrate)}
+                                        </div>
+                                    )}
+                                    {watchLinks.rent && (
+                                        <div className="mt-4">
+                                            <h3 className="font-semibold mb-2">Rent On:</h3>
+                                            {renderProviderList(watchLinks.rent)}
+                                        </div>
+                                    )}
+                                    {watchLinks.buy && (
+                                        <div className="mt-4">
+                                            <h3 className="font-semibold mb-2">Buy On:</h3>
+                                            {renderProviderList(watchLinks.buy)}
+                                        </div>
+                                    )}
+                                    <a href={watchLinks.link} target="_blank" rel="noopener noreferrer" className="text-xs text-gray-400 mt-4 block">
+                                        Provider data from JustWatch
+                                    </a>
+                                </div>
+                            </>
+                        )}
                     </div>
 
                     <h2 className="text-3xl font-bold mt-8 mb-4">Media</h2>

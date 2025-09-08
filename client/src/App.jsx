@@ -17,6 +17,7 @@ import ActorDetailPage from './pages/ActorDetailPage';
 
 import AdminDashboard from './pages/AdminDashboard';
 import AdminRoute from './components/AdminRoute';
+import Loader from './components/Loader';
 
 // Import all the new footer pages
 import HelpCenterPage from './pages/HelpCenterPage';
@@ -54,14 +55,14 @@ function App() {
     }, [token, setUser, logout]);
 
     if (loading) {
-        return <div className="bg-black h-screen flex justify-center items-center text-white">Loading...</div>;
+        return <Loader />;
     }
 
     return (
         <Router>
             <Routes>
                 {/* --- Main App Routes --- */}
-                <Route path="/" element={ <Home /> } />
+                <Route path="/" element={<Home />} />
                 <Route path="/profile" element={token ? <Profile /> : <Navigate to="/login" />} />
                 <Route path="/details/:mediaType/:id" element={token ? <DetailPage /> : <Navigate to="/login" />} />
                 <Route path="/my-list" element={token ? <MyListPage /> : <Navigate to="/login" />} />

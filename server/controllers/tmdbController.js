@@ -47,3 +47,9 @@ export const getTopRated = (req, res) => {
     const tmdbUrl = `https://api.themoviedb.org/3/movie/top_rated?api_key=${apiKey}&language=en-US`;
     fetchWithCacheFallback(res, req.originalUrl, tmdbUrl);
 };
+
+export const getWatchProviders = (req, res) => {
+    const { mediaType, id } = req.params;
+    const tmdbUrl = `https://api.themoviedb.org/3/${mediaType}/${id}/watch/providers?api_key=${apiKey}`;
+    fetchWithCacheFallback(res, req.originalUrl, tmdbUrl);
+};
