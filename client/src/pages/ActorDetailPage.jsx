@@ -4,6 +4,7 @@ import axios from '../api/axios';
 import { API_KEY } from '../api/requests';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import Loader from '../components/Loader';
 
 const ActorDetailPage = () => {
     const { personId } = useParams();
@@ -32,7 +33,7 @@ const ActorDetailPage = () => {
     }, [personId]);
 
     if (!person) {
-        return <div className="bg-black text-white h-screen flex justify-center items-center">Loading...</div>;
+        return <Loader />;
     }
 
     return (

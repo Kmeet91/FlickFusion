@@ -73,18 +73,18 @@ function App() {
                 <Route path="/person/:personId" element={token ? <ActorDetailPage /> : <Navigate to="/login" />} />
 
                 {/* --- New Footer Page Routes --- */}
-                <Route path="/help-center" element={token ? <HelpCenterPage /> : <Navigate to="/login" />} />
-                <Route path="/privacy" element={token ? <PrivacyPage /> : <Navigate to="/login" />} />
-                <Route path="/terms-of-use" element={token ? <TermsOfUsePage /> : <Navigate to="/login" />} />
-                <Route path="/jobs" element={token ? <JobsPage /> : <Navigate to="/login" />} />
-                <Route path="/contact-us" element={token ? <ContactUsPage /> : <Navigate to="/login" />} />
-                <Route path="/legal-notices" element={token ? <LegalNoticesPage /> : <Navigate to="/login" />} />
-                <Route path="/audio-description" element={token ? <AudioDescriptionPage /> : <Navigate to="/login" />} />
-                <Route path="/investor-relations" element={token ? <InvestorRelationsPage /> : <Navigate to="/login" />} />
-                <Route path="/cookie-preferences" element={token ? <CookiePreferencesPage /> : <Navigate to="/login" />} />
-                <Route path="/gift-cards" element={token ? <GiftCardsPage /> : <Navigate to="/login" />} />
-                <Route path="/corporate-information" element={token ? <CorporateInformationPage /> : <Navigate to="/login" />} />
-                <Route path="/media-center" element={token ? <MediaCenterPage /> : <Navigate to="/login" />} />
+                <Route path="/help-center" element={ <HelpCenterPage /> } />
+                <Route path="/privacy" element={ <PrivacyPage /> } />
+                <Route path="/terms-of-use" element={ <TermsOfUsePage />} />
+                <Route path="/jobs" element={<JobsPage />} />
+                <Route path="/contact-us" element={ <ContactUsPage />} />
+                <Route path="/legal-notices" element={ <LegalNoticesPage />} />
+                <Route path="/audio-description" element={ <AudioDescriptionPage />} />
+                <Route path="/investor-relations" element={ <InvestorRelationsPage />} />
+                <Route path="/cookie-preferences" element={ <CookiePreferencesPage />} />
+                <Route path="/gift-cards" element={ <GiftCardsPage />} />
+                <Route path="/corporate-information" element={ <CorporateInformationPage />} />
+                <Route path="/media-center" element={ <MediaCenterPage />} />
 
                 {/* --- Auth Routes --- */}
                 <Route path="/login" element={!token ? <Login /> : <Navigate to="/" />} />

@@ -58,7 +58,7 @@ const CategoryPage = () => {
 
     if (loading && page === 1) {
         // We will replace this in the next step
-        return <div className="bg-[#141414] text-white h-screen flex justify-center items-center">Loading...</div>;
+        return <Loader />;
     }
     return (
         <div className='bg-[#141414] min-h-screen text-white'>

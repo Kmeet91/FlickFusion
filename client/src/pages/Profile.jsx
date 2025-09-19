@@ -3,7 +3,7 @@ import api from '../api/api';
 import Navbar from '../components/Navbar';
 import useUserStore from '../store/userStore';
 import Footer from '../components/Footer';
-
+import Loader from '../components/Loader';
 
 const DEFAULT_PLACEHOLDER = 'https://i.imgur.com/6VBx3io.png'; // A neutral default avatar
 
@@ -71,7 +71,7 @@ const Profile = () => {
         }
     };
 
-    if (!user) return <div className="bg-black text-white h-screen flex justify-center items-center">Loading...</div>;
+    if (!user) return <Loader />;
 
     return (
         <div className='bg-[#141414] min-h-screen text-white'>
