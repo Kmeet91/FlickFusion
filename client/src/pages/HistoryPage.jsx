@@ -18,6 +18,7 @@ const HistoryPage = () => {
             await api.delete(`/users/history/${movieId}`);
             removeFromList('history', movieId);
         } catch (error) {
+            console.error("Could not remove item from history:", error);
             alert("Could not remove item from history.");
         }
     };

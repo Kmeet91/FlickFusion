@@ -6,7 +6,6 @@ import cors from 'cors';
 import { Server } from 'socket.io';
 import http from 'http';
 import { GridFSBucket } from 'mongodb';
-import tmdbRoutes from './routes/tmdbRoutes.js';
 
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/users.js';
@@ -32,7 +31,7 @@ conn.once('open', () => {
     bucket = new GridFSBucket(conn.db, {
         bucketName: 'uploads'
     });
-    console.log('Database & GridFS Bucket Initialized... - server.js:35');
+    console.log('Database & GridFS Bucket Initialized... - server.js:34');
 });
 
 // --- Routes ---
@@ -41,7 +40,6 @@ app.use('/api/users', userRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/site', siteRoutes);
 app.use('/api/reviews', reviewRoutes);
-app.use('/api/tmdb', tmdbRoutes);
 app.use('/api/admin', adminRoutes); 
 
 // --- CORRECTED ROUTE TO SERVE IMAGES ---
@@ -76,18 +74,18 @@ const io = new Server(server, {
 });
 
 io.on('connection', (socket) => {
-    console.log('a user connected: - server.js:79', socket.id);
+    console.log('a user connected: - server.js:77', socket.id);
     socket.on('join-room', (roomId) => {
         socket.join(roomId);
-        console.log(`User ${socket.id} joined room ${roomId} - server.js:82`);
+        console.log(`User ${socket.id} joined room ${roomId} - server.js:80`);
     });
     socket.on('send-playback-action', ({ roomId, action, time }) => {
         socket.to(roomId).emit('receive-playback-action', { action, time });
     });
     socket.on('disconnect', () => {
-        console.log('user disconnected: - server.js:88', socket.id);
+        console.log('user disconnected: - server.js:86', socket.id);
     });
 });
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => console.log(`Server started on port ${PORT} - server.js:93`));
+server.listen(PORT, () => console.log(`Server started on port ${PORT} - server.js:91`));

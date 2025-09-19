@@ -5,11 +5,13 @@ import api from '../api/api';
 import useUserStore from '../store/userStore';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { FaPlay, FaStar, FaTimes } from 'react-icons/fa';
+import { FaPlay, FaStar, FaTimes, FaDownload } from 'react-icons/fa';
 import { API_KEY } from '../api/requests';
 import Modal from 'react-modal';
 import YouTube from 'react-youtube';
 import Loader from '../components/Loader';
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
 
 Modal.setAppElement('#root');
 
@@ -48,7 +50,7 @@ const DetailPage = () => {
 
             try {
                 const ourReviewsRes = await api.get(`/reviews/${mediaType}/${id}`);
-                const providersRes = await api.get(`/tmdb/providers/${mediaType}/${id}`);
+                // const providersRes = await api.get(`/tmdb/providers/${mediaType}/${id}`);
                 const [detailsRes, creditsRes, videosRes, imagesRes, recommendationsRes, keywordsRes, tmdbReviewsRes] = await Promise.all(
                     endpoints.map(endpoint => axios.get(endpoint))
                 );
@@ -56,7 +58,7 @@ const DetailPage = () => {
                 if (isMounted) {
                     setDetails(detailsRes.data);
                     setCredits(creditsRes.data);
-                    setProviders(providersRes.data.results); 
+                    // setProviders(providersRes.data.results); 
                     setVideos(videosRes.data.results);
                     setImages(imagesRes.data);
                     setRecommendations(recommendationsRes.data.results);
@@ -138,8 +140,7 @@ const DetailPage = () => {
     const isInWatchlist = user?.watchlist?.some(item => item.id.toString() === id);
 
     if (!details || !credits) {
-        return <div className="bg-black text-white h-screen flex justify-center items-center">Loading...</div>;
-    }
+        return <Loader />;    }
 
     const renderProviderList = (providerList) => (
         <div className="flex flex-wrap gap-4">
@@ -150,6 +151,53 @@ const DetailPage = () => {
             ))}
         </div>
     );
+
+    const handleDownloadMedia = async () => {
+        if (!images.posters || !images.backdrops) {
+            alert("No media available to download.");
+            return;
+        }
+
+        alert("Preparing your download... this may take a moment.");
+
+        const zip = new JSZip();
+        const postersFolder = zip.folder('posters');
+        const backdropsFolder = zip.folder('backdrops');
+
+        const imageFetchPromises = [];
+
+        // Add all posters to the zip
+        images.posters.forEach((poster, index) => {
+            const url = `https://image.tmdb.org/t/p/original${poster.file_path}`;
+            const promise = fetch(url)
+                .then(res => res.blob())
+                .then(blob => {
+                    postersFolder.file(`poster_${index + 1}.jpg`, blob);
+                });
+            imageFetchPromises.push(promise);
+        });
+
+        // Add all backdrops to the zip
+        images.backdrops.forEach((backdrop, index) => {
+            const url = `https://image.tmdb.org/t/p/original${backdrop.file_path}`;
+            const promise = fetch(url)
+                .then(res => res.blob())
+                .then(blob => {
+                    backdropsFolder.file(`backdrop_${index + 1}.jpg`, blob);
+                });
+            imageFetchPromises.push(promise);
+        });
+
+        try {
+            await Promise.all(imageFetchPromises);
+            const content = await zip.generateAsync({ type: 'blob' });
+            const title = details.title || details.name;
+            saveAs(content, `${title.replace(/ /g, '_')}_media.zip`);
+        } catch (error) {
+            console.error("Failed to create zip file:", error);
+            alert("Sorry, the download could not be completed.");
+        }
+    };
 
     const watchLinks = providers?.IN || providers?.US;
 
@@ -166,6 +214,7 @@ const DetailPage = () => {
                         <div className="flex items-center gap-4 my-4">
                             <button onClick={() => handlePlayTrailer()} className="flex items-center gap-2 font-semibold hover:text-gray-300 transition"><FaPlay /> Play Trailer</button>
                             <button onClick={handleAddToMyList} disabled={isInWatchlist} className={`font-semibold rounded px-4 py-2 transition flex items-center gap-2 ${isInWatchlist ? 'bg-green-600 cursor-not-allowed' : 'bg-gray-500 bg-opacity-50 hover:bg-opacity-30'}`}>{isInWatchlist ? '✓ Added' : '+ My List'}</button>
+                            <button onClick={handleDownloadMedia} className="flex items-center gap-2 font-semibold hover:text-gray-300 transition"><FaDownload /> Download Media</button>
                             <div className="flex items-center gap-1"><FaStar className="text-yellow-400" /><span>{details.vote_average.toFixed(1)} / 10</span></div>
                         </div>
                         <p className="max-w-2xl">{details.overview}</p>

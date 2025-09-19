@@ -5,7 +5,7 @@ import { API_KEY } from '../api/requests';
 import Navbar from '../components/Navbar';
 import AddToListButton from '../components/AddToListButton';
 import Footer from '../components/Footer';
-
+import Loader from '../components/Loader';
 
 const SearchPage = () => {
     const [searchParams] = useSearchParams();
@@ -33,8 +33,7 @@ const SearchPage = () => {
         }
     }, [query]);
 
-    if (loading) return <div className="bg-[#141414] text-white h-screen flex justify-center items-center">Searching...</div>;
-
+    if (loading) return <Loader />
     return (
         <div className='bg-[#141414] min-h-screen text-white'>
             <Navbar />

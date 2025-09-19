@@ -34,7 +34,7 @@ const Footer = () => {
                         <Link to="/contact-us" className="hover:text-white transition">Contact Us</Link>
                     </div>
                 </div>
-                <p className="text-xs mt-8">&copy; 2025 Netlify Clone. All rights reserved.</p>
+                <p className="text-xs mt-8">&copy; 2025 FlickFusion. All rights reserved.</p>
             </div>
         </footer>
     );

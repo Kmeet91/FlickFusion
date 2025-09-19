@@ -18,6 +18,7 @@ const MyListPage = () => {
             await api.delete(`/users/watchlist/${movieId}`);
             removeFromList('watchlist', movieId);
         } catch (error) {
+            console.error("Could not remove item from watchlist:", error);
             alert("Could not remove item from list.");
         }
     };
