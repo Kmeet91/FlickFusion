@@ -9,7 +9,7 @@ const UserSchema = new mongoose.Schema({
         default: 'user'
     },
     password: { type: String, required: true },
-    avatar: { type: String, default: 'https://i.imgur.com/6VBx3io.png' }, // A neutral default avatar
+    avatar: { type: String, default: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png' }, // A neutral default avatar
     watchlist: [{ type: Object }],
     history: [{ type: Object }], // <-- ADD THIS LINE
     firstName: { type: String, default: '' },

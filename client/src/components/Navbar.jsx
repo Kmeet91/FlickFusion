@@ -65,11 +65,12 @@ const Navbar = () => {
     };
 
     const getAvatarUrl = () => {
-        if (!user?.avatar) return null;
+        if (!user || !user.avatar) return null;
         if (user.avatar.startsWith('http')) return user.avatar;
         return `http://localhost:5000/api/image/${user.avatar}`;
     };
     const avatarUrl = getAvatarUrl();
+    
 
     return (
         <div className={`fixed top-0 w-full p-4 z-50 transition-all duration-300 ${isScrolled ? 'bg-black/90' : 'bg-transparent'}`}>
